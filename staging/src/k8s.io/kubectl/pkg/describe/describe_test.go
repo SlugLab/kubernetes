@@ -4717,9 +4717,12 @@ func TestDescribeResourceQuota(t *testing.T) {
 				corev1.ResourceName(corev1.ResourceCPU):            resource.MustParse("1"),
 				corev1.ResourceName(corev1.ResourceLimitsCPU):      resource.MustParse("2"),
 				corev1.ResourceName(corev1.ResourceLimitsMemory):   resource.MustParse("2G"),
+				corev1.ResourceName(corev1.ResourceLimitsNodeLimits1): resource.MustParse("1000Ki"),
+
 				corev1.ResourceName(corev1.ResourceMemory):         resource.MustParse("1G"),
 				corev1.ResourceName(corev1.ResourceRequestsCPU):    resource.MustParse("1"),
 				corev1.ResourceName(corev1.ResourceRequestsMemory): resource.MustParse("1G"),
+				corev1.ResourceName(corev1.ResourceRequestNodeLimits1): resource.MustParse("1000Ki"),
 			},
 			Used: corev1.ResourceList{
 				corev1.ResourceName(corev1.ResourceCPU):            resource.MustParse("0"),
@@ -4728,6 +4731,7 @@ func TestDescribeResourceQuota(t *testing.T) {
 				corev1.ResourceName(corev1.ResourceMemory):         resource.MustParse("0G"),
 				corev1.ResourceName(corev1.ResourceRequestsCPU):    resource.MustParse("0"),
 				corev1.ResourceName(corev1.ResourceRequestsMemory): resource.MustParse("1000Ki"),
+				corev1.ResourceName(corev1.ResourceRequestNodeLimits1): resource.MustParse("1000Ki"),
 			},
 		},
 	})

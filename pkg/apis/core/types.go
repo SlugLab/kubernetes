@@ -4732,6 +4732,13 @@ const (
 	// Volume size, in bytes (e,g. 5Gi = 5GiB = 5 * 1024 * 1024 * 1024)
 	ResourceStorage ResourceName = "storage"
 	// Local ephemeral storage, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024)
+	ResourceNodeLimit1 ResourceName = "node_limit1"
+	// Local ephemeral storage, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024)
+	ResourceNodeLimit2 ResourceName = "node_limit2"
+	// Local ephemeral storage, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024)
+	ResourceNodeLimit3 ResourceName = "node_limit3"
+	// Local ephemeral storage, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024)
+	ResourceNodeLimit4 ResourceName = "node_limit4"
 	// The resource name for ResourceEphemeralStorage is alpha and it can change across releases.
 	ResourceEphemeralStorage ResourceName = "ephemeral-storage"
 )
@@ -5289,6 +5296,10 @@ const (
 	ResourceRequestsCPU ResourceName = "requests.cpu"
 	// Memory request, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024)
 	ResourceRequestsMemory ResourceName = "requests.memory"
+	ResourceRequestNodeLimits1 ResourceName = "requests.node_limit1"
+	ResourceRequestNodeLimits2 ResourceName = "requests.node_limit2"
+	ResourceRequestNodeLimits3 ResourceName = "requests.node_limit3"
+	ResourceRequestNodeLimits4 ResourceName = "requests.node_limit4"
 	// Storage request, in bytes
 	ResourceRequestsStorage ResourceName = "requests.storage"
 	// Local ephemeral storage request, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024)
@@ -5297,6 +5308,10 @@ const (
 	ResourceLimitsCPU ResourceName = "limits.cpu"
 	// Memory limit, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024)
 	ResourceLimitsMemory ResourceName = "limits.memory"
+	ResourceLimitsNodeLimits1 ResourceName = "limits.node_limit1"
+	ResourceLimitsNodeLimits2 ResourceName = "limits.node_limit2"
+	ResourceLimitsNodeLimits3 ResourceName = "limits.node_limit3"
+	ResourceLimitsNodeLimits4 ResourceName = "limits.node_limit4"
 	// Local ephemeral storage limit, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024)
 	ResourceLimitsEphemeralStorage ResourceName = "limits.ephemeral-storage"
 )

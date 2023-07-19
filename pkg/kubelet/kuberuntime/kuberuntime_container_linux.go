@@ -116,14 +116,19 @@ func (m *kubeGenericRuntimeManager) generateLinuxContainerResources(pod *v1.Pod,
 		}
 	}
 
-	// Set memory.min and memory.high to enforce MemoryQoS
+	// Set memory.min, memory.node_limit* and memory.high to enforce MemoryQoS
 	if enforceMemoryQoS {
 		unified := map[string]string{}
+		memoryNodeLimit := map[int32]int64{}
 		memoryRequest := container.Resources.Requests.Memory().Value()
 		memoryLimit := container.Resources.Limits.Memory().Value()
 		if memoryRequest != 0 {
 			unified[cm.MemoryMin] = strconv.FormatInt(memoryRequest, 10)
 		}
+		memoryNodeLimit[0] = container.Resources.Requests.NodeLimit1().Value()
+		memoryNodeLimit[1] = container.Resources.Requests.NodeLimit2().Value()
+		memoryNodeLimit[2] = container.Resources.Requests.NodeLimit3().Value()
+		memoryNodeLimit[3] = container.Resources.Requests.NodeLimit4().Value()
 
 		// Guaranteed pods by their QoS definition requires that memory request equals memory limit and cpu request must equal cpu limit.
 		// Here, we only check from memory perspective. Hence MemoryQoS feature is disabled on those QoS pods by not setting memory.high.
@@ -159,7 +164,14 @@ func (m *kubeGenericRuntimeManager) generateLinuxContainerResources(pod *v1.Pod,
 					lcr.Unified[k] = v
 				}
 			}
-			klog.V(4).InfoS("MemoryQoS config for container", "pod", klog.KObj(pod), "containerName", container.Name, "unified", unified)
+			if len(memoryNodeLimit) == 4 {
+				lcr.MemoryNodeLimit1InBytes = memoryNodeLimit[0]
+				lcr.MemoryNodeLimit2InBytes = memoryNodeLimit[1]
+				lcr.MemoryNodeLimit3InBytes = memoryNodeLimit[2]
+				lcr.MemoryNodeLimit4InBytes = memoryNodeLimit[3]
+				klog.V(4).InfoS("MemoryQoS config for container", "pod", klog.KObj(pod), "containerName", container.Name, "unified", unified,
+					"memoryNodeLimit1", memoryNodeLimit[0], "memoryNodeLimit2", memoryNodeLimit[1], "memoryNodeLimit3", memoryNodeLimit[2], "memoryNodeLimit4", memoryNodeLimit[3])
+			}
 		}
 	}
 

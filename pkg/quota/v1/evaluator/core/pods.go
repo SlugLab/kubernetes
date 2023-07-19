@@ -52,9 +52,17 @@ var podResources = []corev1.ResourceName{
 	corev1.ResourceEphemeralStorage,
 	corev1.ResourceRequestsCPU,
 	corev1.ResourceRequestsMemory,
+	corev1.ResourceRequestNodeLimits1,
+	corev1.ResourceRequestNodeLimits2,
+	corev1.ResourceRequestNodeLimits3,
+	corev1.ResourceRequestNodeLimits4,
 	corev1.ResourceRequestsEphemeralStorage,
 	corev1.ResourceLimitsCPU,
 	corev1.ResourceLimitsMemory,
+	corev1.ResourceLimitsNodeLimits1,
+	corev1.ResourceLimitsNodeLimits2,
+	corev1.ResourceLimitsNodeLimits3,
+	corev1.ResourceLimitsNodeLimits4,
 	corev1.ResourceLimitsEphemeralStorage,
 	corev1.ResourcePods,
 }
@@ -95,6 +103,10 @@ var validationSet = sets.NewString(
 	string(corev1.ResourceMemory),
 	string(corev1.ResourceRequestsCPU),
 	string(corev1.ResourceRequestsMemory),
+	string(corev1.ResourceRequestNodeLimits1),
+	string(corev1.ResourceRequestNodeLimits2),
+	string(corev1.ResourceRequestNodeLimits3),
+	string(corev1.ResourceRequestNodeLimits4),
 	string(corev1.ResourceLimitsCPU),
 	string(corev1.ResourceLimitsMemory),
 )
@@ -271,8 +283,32 @@ func podComputeUsageHelper(requests corev1.ResourceList, limits corev1.ResourceL
 		result[corev1.ResourceMemory] = request
 		result[corev1.ResourceRequestsMemory] = request
 	}
+	if nodelimit1, found := requests[corev1.ResourceNodeLimit1]; found {
+		result[corev1.ResourceNodeLimit1] = nodelimit1
+	}
+	if nodelimit2, found := requests[corev1.ResourceNodeLimit2]; found {
+		result[corev1.ResourceNodeLimit2] = nodelimit2
+	}
+	if nodelimit3, found := requests[corev1.ResourceNodeLimit3]; found {
+		result[corev1.ResourceNodeLimit3] = nodelimit3
+	}
+	if nodelimit4, found := requests[corev1.ResourceNodeLimit4]; found {
+		result[corev1.ResourceNodeLimit4] = nodelimit4
+	}
 	if limit, found := limits[corev1.ResourceMemory]; found {
 		result[corev1.ResourceLimitsMemory] = limit
+	}
+	if nodelimit1, found := limits[corev1.ResourceNodeLimit1]; found {
+		result[corev1.ResourceNodeLimit1] = nodelimit1
+	}
+	if nodelimit2, found := limits[corev1.ResourceNodeLimit2]; found {
+		result[corev1.ResourceNodeLimit2] = nodelimit2
+	}
+	if nodelimit3, found := limits[corev1.ResourceNodeLimit3]; found {
+		result[corev1.ResourceNodeLimit3] = nodelimit3
+	}
+	if nodelimit4, found := limits[corev1.ResourceNodeLimit4]; found {
+		result[corev1.ResourceNodeLimit4] = nodelimit4
 	}
 	if request, found := requests[corev1.ResourceEphemeralStorage]; found {
 		result[corev1.ResourceEphemeralStorage] = request
