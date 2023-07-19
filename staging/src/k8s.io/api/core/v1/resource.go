@@ -35,6 +35,26 @@ func (rl *ResourceList) Memory() *resource.Quantity {
 	return rl.Name(ResourceMemory, resource.BinarySI)
 }
 
+// NodeLimit1 returns the NodeLimit1 limit if specified.
+func (rl *ResourceList) NodeLimit1() *resource.Quantity {
+	return rl.Name(ResourceNodeLimit1, resource.BinarySI)
+}
+
+// NodeLimit2 returns the NodeLimit2 limit if specified.
+func (rl *ResourceList) NodeLimit2() *resource.Quantity {
+	return rl.Name(ResourceNodeLimit2, resource.BinarySI)
+}
+
+// NodeLimit3 returns the NodeLimit3 limit if specified.
+func (rl *ResourceList) NodeLimit3() *resource.Quantity {
+	return rl.Name(ResourceNodeLimit3, resource.BinarySI)
+}
+
+// NodeLimit4 returns the NodeLimit4 limit if specified.
+func (rl *ResourceList) NodeLimit4() *resource.Quantity {
+	return rl.Name(ResourceNodeLimit4, resource.BinarySI)
+}
+
 // Storage returns the Storage limit if specified.
 func (rl *ResourceList) Storage() *resource.Quantity {
 	return rl.Name(ResourceStorage, resource.BinarySI)

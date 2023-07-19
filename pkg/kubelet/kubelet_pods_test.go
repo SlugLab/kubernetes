@@ -4012,6 +4012,9 @@ func TestConvertToAPIContainerStatusesForResources(t *testing.T) {
 	}
 	CPU1AndMem1G := v1.ResourceList{v1.ResourceCPU: resource.MustParse("1"), v1.ResourceMemory: resource.MustParse("1Gi")}
 	CPU2AndMem2G := v1.ResourceList{v1.ResourceCPU: resource.MustParse("2"), v1.ResourceMemory: resource.MustParse("2Gi")}
+	CPU1AndMem2GNode11GNode21G := CPU1AndMem1G.DeepCopy()
+	CPU1AndMem2GNode11GNode21G[v1.ResourceNodeLimit1] = resource.MustParse("1Gi")
+	CPU1AndMem2GNode11GNode21G[v1.ResourceNodeLimit2] = resource.MustParse("1Gi")
 	CPU1AndMem1GAndStorage2G := CPU1AndMem1G.DeepCopy()
 	CPU1AndMem1GAndStorage2G[v1.ResourceEphemeralStorage] = resource.MustParse("2Gi")
 	CPU2AndMem2GAndStorage2G := CPU2AndMem2G.DeepCopy()
@@ -4059,7 +4062,7 @@ func TestConvertToAPIContainerStatusesForResources(t *testing.T) {
 					Image:     "img",
 					ImageID:   "img1234",
 					State:     v1.ContainerState{Running: &v1.ContainerStateRunning{}},
-					Resources: &v1.ResourceRequirements{Limits: CPU2AndMem2G, Requests: CPU1AndMem1G},
+					Resources: &v1.ResourceRequirements{Limits: CPU1AndMem2GNode11GNode21G, Requests: CPU1AndMem2GNode11GNode21G},
 				},
 			},
 			Expected: []v1.ContainerStatus{

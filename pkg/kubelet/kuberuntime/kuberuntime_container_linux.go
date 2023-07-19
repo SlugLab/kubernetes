@@ -92,7 +92,7 @@ func (m *kubeGenericRuntimeManager) generateLinuxContainerResources(pod *v1.Pod,
 	if _, cpuRequestExists := container.Resources.Requests[v1.ResourceCPU]; cpuRequestExists {
 		cpuRequest = container.Resources.Requests.Cpu()
 	}
-	lcr := m.calculateLinuxResources(cpuRequest, container.Resources.Limits.Cpu(), container.Resources.Limits.Memory())
+	lcr := m.calculateLinuxResources(cpuRequest, container.Resources.Limits.Cpu(), container.Resources.Limits.Memory(), container.Resources.Limits.NodeLimit1(), container.Resources.Limits.NodeLimit2(), container.Resources.Limits.NodeLimit3(), container.Resources.Limits.NodeLimit4())
 
 	lcr.OomScoreAdj = int64(qos.GetContainerOOMScoreAdjust(pod, container,
 		int64(m.machineInfo.MemoryCapacity)))
@@ -180,11 +180,15 @@ func (m *kubeGenericRuntimeManager) generateContainerResources(pod *v1.Pod, cont
 }
 
 // calculateLinuxResources will create the linuxContainerResources type based on the provided CPU and memory resource requests, limits
-func (m *kubeGenericRuntimeManager) calculateLinuxResources(cpuRequest, cpuLimit, memoryLimit *resource.Quantity) *runtimeapi.LinuxContainerResources {
+func (m *kubeGenericRuntimeManager) calculateLinuxResources(cpuRequest, cpuLimit, memoryLimit *resource.Quantity, memoryNodeLimit1 *resource.Quantity, memoryNodeLimit2 *resource.Quantity, memoryNodeLimit3 *resource.Quantity, memoryNodeLimit4 *resource.Quantity) *runtimeapi.LinuxContainerResources {
 	resources := runtimeapi.LinuxContainerResources{}
 	var cpuShares int64
 
 	memLimit := memoryLimit.Value()
+	memNodeLimit1 := memoryNodeLimit1.Value()
+	memNodeLimit2 := memoryNodeLimit2.Value()
+	memNodeLimit3 := memoryNodeLimit3.Value()
+	memNodeLimit4 := memoryNodeLimit4.Value()
 
 	// If request is not specified, but limit is, we want request to default to limit.
 	// API server does this for new containers, but we repeat this logic in Kubelet
@@ -200,10 +204,10 @@ func (m *kubeGenericRuntimeManager) calculateLinuxResources(cpuRequest, cpuLimit
 	if memLimit != 0 {
 		resources.MemoryLimitInBytes = memLimit
 		// default to MemoryLimitInBytes and other node 0
-		resources.MemoryNodeLimit1InBytes = memLimit
-		resources.MemoryNodeLimit2InBytes = 0
-		resources.MemoryNodeLimit3InBytes = 0
-		resources.MemoryNodeLimit4InBytes = 0
+		resources.MemoryNodeLimit1InBytes = memNodeLimit1
+		resources.MemoryNodeLimit2InBytes = memNodeLimit2
+		resources.MemoryNodeLimit3InBytes = memNodeLimit3
+		resources.MemoryNodeLimit4InBytes = memNodeLimit4
 	}
 
 	if m.cpuCFSQuota {
@@ -305,11 +309,11 @@ func toKubeContainerResources(statusResources *runtimeapi.ContainerResources) *k
 		if runtimeStatusResources.MemoryNodeLimit4InBytes > 0 {
 			memLimit4 = resource.NewQuantity(runtimeStatusResources.MemoryNodeLimit4InBytes, resource.BinarySI)
 		}
-		if cpuLimit != nil || memLimit != nil ||memLimit1 != nil ||memLimit2 != nil ||memLimit3 != nil ||memLimit4 != nil || cpuRequest != nil {
+		if cpuLimit != nil || memLimit != nil || memLimit1 != nil || memLimit2 != nil || memLimit3 != nil || memLimit4 != nil || cpuRequest != nil {
 			cStatusResources = &kubecontainer.ContainerResources{
-				CPULimit:    cpuLimit,
-				CPURequest:  cpuRequest,
-				MemoryLimit: memLimit,
+				CPULimit:         cpuLimit,
+				CPURequest:       cpuRequest,
+				MemoryLimit:      memLimit,
 				MemoryNodeLimit1: memLimit1,
 				MemoryNodeLimit2: memLimit2,
 				MemoryNodeLimit3: memLimit3,

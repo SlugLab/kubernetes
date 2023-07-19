@@ -380,6 +380,10 @@ type MemoryStats struct {
 	// hugepages).
 	// Units: Bytes.
 	RSS uint64 `json:"rss"`
+	RSS1 uint64 `json:"rss1"`
+	RSS2 uint64 `json:"rss2"`
+	RSS3 uint64 `json:"rss3"`
+	RSS4 uint64 `json:"rss4"`
 
 	// The amount of swap currently used by the processes in this cgroup
 	// Units: Bytes.

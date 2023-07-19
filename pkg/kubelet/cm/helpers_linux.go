@@ -145,6 +145,10 @@ func ResourceConfigForPod(pod *v1.Pod, enforceCPULimits bool, cpuPeriod uint64, 
 	cpuRequests := int64(0)
 	cpuLimits := int64(0)
 	memoryLimits := int64(0)
+	memoryLimits1 := int64(0)
+	memoryLimits2 := int64(0)
+	memoryLimits3 := int64(0)
+	memoryLimits4 := int64(0)
 	if request, found := reqs[v1.ResourceCPU]; found {
 		cpuRequests = request.MilliValue()
 	}
@@ -154,6 +158,19 @@ func ResourceConfigForPod(pod *v1.Pod, enforceCPULimits bool, cpuPeriod uint64, 
 	if limit, found := limits[v1.ResourceMemory]; found {
 		memoryLimits = limit.Value()
 	}
+	if limit, found := limits[v1.ResourceNodeLimit1]; found {
+		memoryLimits1 = limit.Value()
+	}
+	if limit, found := limits[v1.ResourceNodeLimit2]; found {
+		memoryLimits2 = limit.Value()
+	}
+	if limit, found := limits[v1.ResourceNodeLimit3]; found {
+		memoryLimits3 = limit.Value()
+	}
+	if limit, found := limits[v1.ResourceNodeLimit4]; found {
+		memoryLimits4 = limit.Value()
+	}
+
 
 	// convert to CFS values
 	cpuShares := MilliCPUToShares(cpuRequests)
@@ -174,6 +191,10 @@ func ResourceConfigForPod(pod *v1.Pod, enforceCPULimits bool, cpuPeriod uint64, 
 		result.CPUQuota = &cpuQuota
 		result.CPUPeriod = &cpuPeriod
 		result.Memory = &memoryLimits
+		result.MemoryNodeLimit[0] = memoryLimits1
+		result.MemoryNodeLimit[1] = memoryLimits2
+		result.MemoryNodeLimit[2] = memoryLimits3
+		result.MemoryNodeLimit[3] = memoryLimits4
 	} else if qosClass == v1.PodQOSBurstable {
 		result.CPUShares = &cpuShares
 		if cpuLimitsDeclared {
@@ -183,6 +204,10 @@ func ResourceConfigForPod(pod *v1.Pod, enforceCPULimits bool, cpuPeriod uint64, 
 		if memoryLimitsDeclared {
 			result.Memory = &memoryLimits
 		}
+		result.MemoryNodeLimit[0] = memoryLimits1
+		result.MemoryNodeLimit[1] = memoryLimits2
+		result.MemoryNodeLimit[2] = memoryLimits3
+		result.MemoryNodeLimit[3] = memoryLimits4
 	} else {
 		shares := uint64(MinShares)
 		result.CPUShares = &shares
