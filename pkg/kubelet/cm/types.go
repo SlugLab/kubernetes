@@ -23,6 +23,7 @@ import (
 
 // ResourceConfig holds information about all the supported cgroup resource parameters.
 type ResourceConfig struct {
+	MemoryNodeLimit map[int32]int64
 	// Memory limit (in bytes).
 	Memory *int64
 	// CPU shares (relative weight vs. other containers).

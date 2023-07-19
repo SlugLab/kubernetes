@@ -49,6 +49,10 @@ const (
 	offsetMemMajorPageFaults
 	offsetMemUsageBytes
 	offsetMemRSSBytes
+	offsetMemRSS1Bytes
+	offsetMemRSS2Bytes
+	offsetMemRSS3Bytes
+	offsetMemRSS4Bytes
 	offsetMemWorkingSetBytes
 	offsetNetRxBytes
 	offsetNetRxErrors
@@ -452,6 +456,10 @@ func TestHasDedicatedImageFs(t *testing.T) {
 func getTerminatedContainerInfo(seed int, podName string, podNamespace string, containerName string) cadvisorapiv2.ContainerInfo {
 	cinfo := getTestContainerInfo(seed, podName, podNamespace, containerName)
 	cinfo.Stats[0].Memory.RSS = 0
+	cinfo.Stats[0].Memory.RSS1 = 0
+	cinfo.Stats[0].Memory.RSS2 = 0
+	cinfo.Stats[0].Memory.RSS3 = 0
+	cinfo.Stats[0].Memory.RSS4 = 0
 	cinfo.Stats[0].CpuInst.Usage.Total = 0
 	cinfo.Stats[0].Network = &cadvisorapiv2.NetworkStats{
 		Interfaces: []cadvisorapiv1.InterfaceStats{{
@@ -474,6 +482,10 @@ func getTerminatedContainerInfo(seed int, podName string, podNamespace string, c
 func getContainerInfoWithZeroCpuMem(seed int, podName string, podNamespace string, containerName string) cadvisorapiv2.ContainerInfo {
 	cinfo := getTestContainerInfo(seed, podName, podNamespace, containerName)
 	cinfo.Stats[0].Memory.RSS = 0
+	cinfo.Stats[0].Memory.RSS1 = 0
+	cinfo.Stats[0].Memory.RSS2 = 0
+	cinfo.Stats[0].Memory.RSS3 = 0
+	cinfo.Stats[0].Memory.RSS4 = 0
 	cinfo.Stats[0].CpuInst.Usage.Total = 0
 	return cinfo
 }
@@ -514,6 +526,10 @@ func getTestContainerInfo(seed int, podName string, podNamespace string, contain
 			Usage:      uint64(seed + offsetMemUsageBytes),
 			WorkingSet: uint64(seed + offsetMemWorkingSetBytes),
 			RSS:        uint64(seed + offsetMemRSSBytes),
+			RSS1:       uint64(seed + offsetMemRSS1Bytes),
+			RSS2:       uint64(seed + offsetMemRSS2Bytes),
+			RSS3:       uint64(seed + offsetMemRSS3Bytes),
+			RSS4:       uint64(seed + offsetMemRSS4Bytes),
 			ContainerData: cadvisorapiv1.MemoryStatsMemoryData{
 				Pgfault:    uint64(seed + offsetMemPageFaults),
 				Pgmajfault: uint64(seed + offsetMemMajorPageFaults),
@@ -686,6 +702,11 @@ func checkMemoryStats(t *testing.T, label string, seed int, info cadvisorapiv2.C
 	assert.EqualValues(t, seed+offsetMemUsageBytes, *stats.UsageBytes, label+".Mem.UsageBytes")
 	assert.EqualValues(t, seed+offsetMemWorkingSetBytes, *stats.WorkingSetBytes, label+".Mem.WorkingSetBytes")
 	assert.EqualValues(t, seed+offsetMemRSSBytes, *stats.RSSBytes, label+".Mem.RSSBytes")
+	assert.EqualValues(t, seed+offsetMemRSS1Bytes, *stats.RSS1Bytes, label+".Mem.RSS1Bytes")
+	assert.EqualValues(t, seed+offsetMemRSS2Bytes, *stats.RSS2Bytes, label+".Mem.RSS2Bytes")
+	assert.EqualValues(t, seed+offsetMemRSS3Bytes, *stats.RSS3Bytes, label+".Mem.RSS3Bytes")
+	assert.EqualValues(t, seed+offsetMemRSS4Bytes, *stats.RSS4Bytes, label+".Mem.RSS4Bytes")
+
 	assert.EqualValues(t, seed+offsetMemPageFaults, *stats.PageFaults, label+".Mem.PageFaults")
 	assert.EqualValues(t, seed+offsetMemMajorPageFaults, *stats.MajorPageFaults, label+".Mem.MajorPageFaults")
 	if !info.Spec.HasMemory || isMemoryUnlimited(info.Spec.Memory.Limit) {

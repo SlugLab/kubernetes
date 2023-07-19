@@ -199,6 +199,11 @@ func (m *kubeGenericRuntimeManager) calculateLinuxResources(cpuRequest, cpuLimit
 	resources.CpuShares = cpuShares
 	if memLimit != 0 {
 		resources.MemoryLimitInBytes = memLimit
+		// default to MemoryLimitInBytes and other node 0
+		resources.MemoryNodeLimit1InBytes = memLimit
+		resources.MemoryNodeLimit2InBytes = 0
+		resources.MemoryNodeLimit3InBytes = 0
+		resources.MemoryNodeLimit4InBytes = 0
 	}
 
 	if m.cpuCFSQuota {
@@ -272,7 +277,7 @@ func toKubeContainerResources(statusResources *runtimeapi.ContainerResources) *k
 	var cStatusResources *kubecontainer.ContainerResources
 	runtimeStatusResources := statusResources.GetLinux()
 	if runtimeStatusResources != nil {
-		var cpuLimit, memLimit, cpuRequest *resource.Quantity
+		var cpuLimit, memLimit, memLimit1, memLimit2, memLimit3, memLimit4, cpuRequest *resource.Quantity
 		if runtimeStatusResources.CpuPeriod > 0 {
 			milliCPU := quotaToMilliCPU(runtimeStatusResources.CpuQuota, runtimeStatusResources.CpuPeriod)
 			if milliCPU > 0 {
@@ -288,11 +293,27 @@ func toKubeContainerResources(statusResources *runtimeapi.ContainerResources) *k
 		if runtimeStatusResources.MemoryLimitInBytes > 0 {
 			memLimit = resource.NewQuantity(runtimeStatusResources.MemoryLimitInBytes, resource.BinarySI)
 		}
-		if cpuLimit != nil || memLimit != nil || cpuRequest != nil {
+		if runtimeStatusResources.MemoryNodeLimit1InBytes > 0 {
+			memLimit1 = resource.NewQuantity(runtimeStatusResources.MemoryNodeLimit1InBytes, resource.BinarySI)
+		}
+		if runtimeStatusResources.MemoryNodeLimit2InBytes > 0 {
+			memLimit2 = resource.NewQuantity(runtimeStatusResources.MemoryNodeLimit2InBytes, resource.BinarySI)
+		}
+		if runtimeStatusResources.MemoryNodeLimit3InBytes > 0 {
+			memLimit3 = resource.NewQuantity(runtimeStatusResources.MemoryNodeLimit3InBytes, resource.BinarySI)
+		}
+		if runtimeStatusResources.MemoryNodeLimit4InBytes > 0 {
+			memLimit4 = resource.NewQuantity(runtimeStatusResources.MemoryNodeLimit4InBytes, resource.BinarySI)
+		}
+		if cpuLimit != nil || memLimit != nil ||memLimit1 != nil ||memLimit2 != nil ||memLimit3 != nil ||memLimit4 != nil || cpuRequest != nil {
 			cStatusResources = &kubecontainer.ContainerResources{
 				CPULimit:    cpuLimit,
 				CPURequest:  cpuRequest,
 				MemoryLimit: memLimit,
+				MemoryNodeLimit1: memLimit1,
+				MemoryNodeLimit2: memLimit2,
+				MemoryNodeLimit3: memLimit3,
+				MemoryNodeLimit4: memLimit4,
 			}
 		}
 	}

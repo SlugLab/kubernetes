@@ -788,20 +788,25 @@ message LinuxContainerResources {
     int64 cpu_shares = 3;
     // Memory limit in bytes. Default: 0 (not specified).
     int64 memory_limit_in_bytes = 4;
+    // Node1-4
+    int64 memory_node_limit1_in_bytes = 5;
+    int64 memory_node_limit2_in_bytes = 6;
+    int64 memory_node_limit3_in_bytes = 7;
+    int64 memory_node_limit4_in_bytes = 8;
     // OOMScoreAdj adjusts the oom-killer score. Default: 0 (not specified).
-    int64 oom_score_adj = 5;
+    int64 oom_score_adj = 9;
     // CpusetCpus constrains the allowed set of logical CPUs. Default: "" (not specified).
-    string cpuset_cpus = 6;
+    string cpuset_cpus = 10;
     // CpusetMems constrains the allowed set of memory nodes. Default: "" (not specified).
-    string cpuset_mems = 7;
+    string cpuset_mems = 11;
     // List of HugepageLimits to limit the HugeTLB usage of container per page size. Default: nil (not specified).
-    repeated HugepageLimit hugepage_limits = 8;
+    repeated HugepageLimit hugepage_limits = 12;
     // Unified resources for cgroup v2. Default: nil (not specified).
     // Each key/value in the map refers to the cgroup v2.
     // e.g. "memory.max": "6937202688" or "io.weight": "default 100".
-    map<string, string> unified = 9;
+    map<string, string> unified = 13;
     // Memory swap limit in bytes. Default 0 (not specified).
-    int64 memory_swap_limit_in_bytes = 10;
+    int64 memory_swap_limit_in_bytes = 14;
 }
 
 // HugepageLimit corresponds to the file`hugetlb.<hugepagesize>.limit_in_byte` in container level cgroup.
@@ -1675,10 +1680,14 @@ message MemoryUsage {
     UInt64Value usage_bytes = 4;
     // The amount of anonymous and swap cache memory (includes transparent hugepages).
     UInt64Value rss_bytes = 5;
+    UInt64Value rss1_bytes = 6;
+    UInt64Value rss2_bytes = 7;
+    UInt64Value rss3_bytes = 8;
+    UInt64Value rss4_bytes = 9;
     // Cumulative number of minor page faults.
-    UInt64Value page_faults = 6;
+    UInt64Value page_faults = 10;
     // Cumulative number of major page faults.
-    UInt64Value major_page_faults = 7;
+    UInt64Value major_page_faults = 11;
 }
 
 // WindowsMemoryUsage provides the memory usage information specific to Windows

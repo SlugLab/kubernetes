@@ -63,6 +63,10 @@ type ContainerResourceUsage struct {
 	MemoryUsageInBytes      uint64
 	MemoryWorkingSetInBytes uint64
 	MemoryRSSInBytes        uint64
+	MemoryRSS1InBytes        uint64
+	MemoryRSS2InBytes        uint64
+	MemoryRSS3InBytes        uint64
+	MemoryRSS4InBytes        uint64
 	// The interval used to calculate CPUUsageInCores.
 	CPUInterval time.Duration
 }
@@ -262,6 +266,10 @@ func getOneTimeResourceUsageOnNode(
 			MemoryUsageInBytes:      removeUint64Ptr(newStats.Memory.UsageBytes),
 			MemoryWorkingSetInBytes: removeUint64Ptr(newStats.Memory.WorkingSetBytes),
 			MemoryRSSInBytes:        removeUint64Ptr(newStats.Memory.RSSBytes),
+			MemoryRSS1InBytes:        removeUint64Ptr(newStats.Memory.RSS1Bytes),
+			MemoryRSS2InBytes:        removeUint64Ptr(newStats.Memory.RSS2Bytes),
+			MemoryRSS3InBytes:        removeUint64Ptr(newStats.Memory.RSS3Bytes),
+			MemoryRSS4InBytes:        removeUint64Ptr(newStats.Memory.RSS4Bytes),
 			CPUInterval:             0,
 		}
 	}

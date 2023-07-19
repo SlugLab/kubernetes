@@ -447,6 +447,7 @@ func (m *cgroupManagerImpl) Update(cgroupConfig *CgroupConfig) error {
 }
 
 // Create creates the specified cgroup
+// every job need a sudirectory
 func (m *cgroupManagerImpl) Create(cgroupConfig *CgroupConfig) error {
 	start := time.Now()
 	defer func() {
@@ -641,8 +642,19 @@ func getCgroupMemoryConfig(cgroupPath string) (*ResourceConfig, error) {
 		return nil, fmt.Errorf("failed to read %s for cgroup %v: %v", memLimitFile, cgroupPath, err)
 	}
 	mLim := int64(memLimit)
+
+	memNodeLimitFile := "memory.node_limit"
+	mNLim := make(map[int32]int64, 4)
+	for i := 0; i < 4; i++ {
+		memNodeLimit, err := fscommon.GetCgroupParamUint(cgroupPath, fmt.Sprintf("%s%d", memNodeLimitFile, i))
+		if err != nil {
+			return nil, fmt.Errorf("failed to read %s for cgroup %v: %v", memNodeLimitFile, cgroupPath, err)
+		}
+		mNLim[int32(i)] = int64(memNodeLimit)
+	}
+
 	//TODO(vinaykul,InPlacePodVerticalScaling): Add memory request support
-	return &ResourceConfig{Memory: &mLim}, nil
+	return &ResourceConfig{MemoryNodeLimit: mNLim, Memory: &mLim}, nil
 
 }
 
@@ -726,6 +738,13 @@ func setCgroupMemoryConfig(cgroupPath string, resourceConfig *ResourceConfig) er
 	memLimit := strconv.FormatInt(*resourceConfig.Memory, 10)
 	if err := os.WriteFile(filepath.Join(cgroupPath, memLimitFile), []byte(memLimit), 0700); err != nil {
 		return fmt.Errorf("failed to write %v to %v/%v: %v", memLimit, cgroupPath, memLimitFile, err)
+	}
+	memNodeLimitFile := "memory.node_limit"
+	for i := 0; i < 4; i++ {
+		memLimit := strconv.FormatInt(resourceConfig.MemoryNodeLimit[int32(i)], 10)
+		if err := os.WriteFile(filepath.Join(cgroupPath, fmt.Sprintf("%s%d", memNodeLimitFile, i)), []byte(memLimit), 0700); err != nil {
+			return fmt.Errorf("failed to write %v to %v/%v: %v", memLimit, cgroupPath, memLimitFile, err)
+		}
 	}
 	//TODO(vinaykul,InPlacePodVerticalScaling): Add memory request support
 	return nil

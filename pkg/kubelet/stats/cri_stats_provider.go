@@ -537,12 +537,21 @@ func (p *criStatsProvider) addPodCPUMemoryStats(
 		usageBytes := getUint64Value(cs.Memory.UsageBytes) + getUint64Value(ps.Memory.UsageBytes)
 		workingSetBytes := getUint64Value(cs.Memory.WorkingSetBytes) + getUint64Value(ps.Memory.WorkingSetBytes)
 		rSSBytes := getUint64Value(cs.Memory.RSSBytes) + getUint64Value(ps.Memory.RSSBytes)
+		rSS1Bytes := getUint64Value(cs.Memory.RSS1Bytes) + getUint64Value(ps.Memory.RSS1Bytes)
+		rSS2Bytes := getUint64Value(cs.Memory.RSS2Bytes) + getUint64Value(ps.Memory.RSS2Bytes)
+		rSS3Bytes := getUint64Value(cs.Memory.RSS3Bytes) + getUint64Value(ps.Memory.RSS3Bytes)
+		rSS4Bytes := getUint64Value(cs.Memory.RSS4Bytes) + getUint64Value(ps.Memory.RSS4Bytes)
+
 		pageFaults := getUint64Value(cs.Memory.PageFaults) + getUint64Value(ps.Memory.PageFaults)
 		majorPageFaults := getUint64Value(cs.Memory.MajorPageFaults) + getUint64Value(ps.Memory.MajorPageFaults)
 		ps.Memory.AvailableBytes = &availableBytes
 		ps.Memory.UsageBytes = &usageBytes
 		ps.Memory.WorkingSetBytes = &workingSetBytes
 		ps.Memory.RSSBytes = &rSSBytes
+		ps.Memory.RSS1Bytes = &rSS1Bytes
+		ps.Memory.RSS2Bytes = &rSS2Bytes
+		ps.Memory.RSS3Bytes = &rSS3Bytes
+		ps.Memory.RSS4Bytes = &rSS4Bytes
 		ps.Memory.PageFaults = &pageFaults
 		ps.Memory.MajorPageFaults = &majorPageFaults
 	}

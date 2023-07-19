@@ -323,7 +323,11 @@ type ContainerResources struct {
 	// Memory capaacity reserved for the container
 	MemoryRequest *resource.Quantity
 	// Memory limit enforced on the container
-	MemoryLimit *resource.Quantity
+	MemoryLimit      *resource.Quantity
+	MemoryNodeLimit1 *resource.Quantity
+	MemoryNodeLimit2 *resource.Quantity
+	MemoryNodeLimit3 *resource.Quantity
+	MemoryNodeLimit4 *resource.Quantity
 }
 
 // Status represents the status of a container.

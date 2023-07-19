@@ -109,6 +109,10 @@ var _ = SIGDescribe("Summary API [NodeConformance]", func() {
 						"WorkingSetBytes": bounded(1*e2evolume.Mb, memoryLimit),
 						// this now returns /sys/fs/cgroup/memory.stat total_rss
 						"RSSBytes":        bounded(1*e2evolume.Mb, memoryLimit),
+						"RSS1Bytes":        bounded(1*e2evolume.Mb, memoryLimit),
+						"RSS2Bytes":        bounded(1*e2evolume.Mb, memoryLimit),
+						"RSS3Bytes":        bounded(1*e2evolume.Mb, memoryLimit),
+						"RSS4Bytes":        bounded(1*e2evolume.Mb, memoryLimit),
 						"PageFaults":      bounded(1000, 1e9),
 						"MajorPageFaults": bounded(0, 100000),
 					}),

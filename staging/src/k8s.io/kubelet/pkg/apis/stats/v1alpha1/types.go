@@ -229,6 +229,18 @@ type MemoryStats struct {
 	// hugepages).
 	// +optional
 	RSSBytes *uint64 `json:"rssBytes,omitempty"`
+	// The amount of current rss in node1
+	// +optional
+	RSS1Bytes *uint64 `json:"rss1Bytes,omitempty"`
+	// The amount of current rss in node2
+	// +optional
+	RSS2Bytes *uint64 `json:"rss2Bytes,omitempty"`
+	// The amount of current rss in node3
+	// +optional
+	RSS3Bytes *uint64 `json:"rss3Bytes,omitempty"`
+	// The amount of current rss in node4
+	// +optional
+	RSS4Bytes *uint64 `json:"rss4Bytes,omitempty"`
 	// Cumulative number of minor page faults.
 	// +optional
 	PageFaults *uint64 `json:"pageFaults,omitempty"`

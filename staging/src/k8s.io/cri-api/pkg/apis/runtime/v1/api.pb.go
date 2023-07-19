@@ -3576,18 +3576,22 @@ type LinuxContainerResources struct {
 	CpuShares int64 `protobuf:"varint,3,opt,name=cpu_shares,json=cpuShares,proto3" json:"cpu_shares,omitempty"`
 	// Memory limit in bytes. Default: 0 (not specified).
 	MemoryLimitInBytes int64 `protobuf:"varint,4,opt,name=memory_limit_in_bytes,json=memoryLimitInBytes,proto3" json:"memory_limit_in_bytes,omitempty"`
+	MemoryNodeLimit1InBytes int64 `protobuf:"varint,5,opt,name=memory_node_limit1_in_bytes,json=MemoryNodeLimit1InBytes,proto3" json:"memory_node_limit1_in_bytes,omitempty"`
+	MemoryNodeLimit2InBytes int64 `protobuf:"varint,6,opt,name=memory_node_limit2_in_bytes,json=MemoryNodeLimit2InBytes,proto3" json:"memory_node_limit2_in_bytes,omitempty"`
+	MemoryNodeLimit3InBytes int64 `protobuf:"varint,7,opt,name=memory_node_limit3_in_bytes,json=MemoryNodeLimit3InBytes,proto3" json:"memory_node_limit3_in_bytes,omitempty"`
+	MemoryNodeLimit4InBytes int64 `protobuf:"varint,8,opt,name=memory_node_limit4_in_bytes,json=MemoryNodeLimit4InBytes,proto3" json:"memory_node_limit4_in_bytes,omitempty"`
 	// OOMScoreAdj adjusts the oom-killer score. Default: 0 (not specified).
-	OomScoreAdj int64 `protobuf:"varint,5,opt,name=oom_score_adj,json=oomScoreAdj,proto3" json:"oom_score_adj,omitempty"`
+	OomScoreAdj int64 `protobuf:"varint,9,opt,name=oom_score_adj,json=oomScoreAdj,proto3" json:"oom_score_adj,omitempty"`
 	// CpusetCpus constrains the allowed set of logical CPUs. Default: "" (not specified).
-	CpusetCpus string `protobuf:"bytes,6,opt,name=cpuset_cpus,json=cpusetCpus,proto3" json:"cpuset_cpus,omitempty"`
+	CpusetCpus string `protobuf:"bytes,10,opt,name=cpuset_cpus,json=cpusetCpus,proto3" json:"cpuset_cpus,omitempty"`
 	// CpusetMems constrains the allowed set of memory nodes. Default: "" (not specified).
-	CpusetMems string `protobuf:"bytes,7,opt,name=cpuset_mems,json=cpusetMems,proto3" json:"cpuset_mems,omitempty"`
+	CpusetMems string `protobuf:"bytes,11,opt,name=cpuset_mems,json=cpusetMems,proto3" json:"cpuset_mems,omitempty"`
 	// List of HugepageLimits to limit the HugeTLB usage of container per page size. Default: nil (not specified).
-	HugepageLimits []*HugepageLimit `protobuf:"bytes,8,rep,name=hugepage_limits,json=hugepageLimits,proto3" json:"hugepage_limits,omitempty"`
+	HugepageLimits []*HugepageLimit `protobuf:"bytes,12,rep,name=hugepage_limits,json=hugepageLimits,proto3" json:"hugepage_limits,omitempty"`
 	// Unified resources for cgroup v2. Default: nil (not specified).
 	// Each key/value in the map refers to the cgroup v2.
 	// e.g. "memory.max": "6937202688" or "io.weight": "default 100".
-	Unified map[string]string `protobuf:"bytes,9,rep,name=unified,proto3" json:"unified,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Unified map[string]string `protobuf:"bytes,13,rep,name=unified,proto3" json:"unified,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 	// Memory swap limit in bytes. Default 0 (not specified).
 	MemorySwapLimitInBytes int64    `protobuf:"varint,10,opt,name=memory_swap_limit_in_bytes,json=memorySwapLimitInBytes,proto3" json:"memory_swap_limit_in_bytes,omitempty"`
 	XXX_NoUnkeyedLiteral   struct{} `json:"-"`
@@ -8653,10 +8657,14 @@ type MemoryUsage struct {
 	UsageBytes *UInt64Value `protobuf:"bytes,4,opt,name=usage_bytes,json=usageBytes,proto3" json:"usage_bytes,omitempty"`
 	// The amount of anonymous and swap cache memory (includes transparent hugepages).
 	RssBytes *UInt64Value `protobuf:"bytes,5,opt,name=rss_bytes,json=rssBytes,proto3" json:"rss_bytes,omitempty"`
+	Rss1Bytes *UInt64Value `protobuf:"bytes,6,opt,name=rss1_bytes,json=rss1Bytes,proto3" json:"rss1_bytes,omitempty"`
+	Rss2Bytes *UInt64Value `protobuf:"bytes,7,opt,name=rss2_bytes,json=rss2Bytes,proto3" json:"rss2_bytes,omitempty"`
+	Rss3Bytes *UInt64Value `protobuf:"bytes,8,opt,name=rss3_bytes,json=rss3Bytes,proto3" json:"rss3_bytes,omitempty"`
+	Rss4Bytes *UInt64Value `protobuf:"bytes,9,opt,name=rss4_bytes,json=rss4Bytes,proto3" json:"rss4_bytes,omitempty"`
 	// Cumulative number of minor page faults.
-	PageFaults *UInt64Value `protobuf:"bytes,6,opt,name=page_faults,json=pageFaults,proto3" json:"page_faults,omitempty"`
+	PageFaults *UInt64Value `protobuf:"bytes,10,opt,name=page_faults,json=pageFaults,proto3" json:"page_faults,omitempty"`
 	// Cumulative number of major page faults.
-	MajorPageFaults      *UInt64Value `protobuf:"bytes,7,opt,name=major_page_faults,json=majorPageFaults,proto3" json:"major_page_faults,omitempty"`
+	MajorPageFaults      *UInt64Value `protobuf:"bytes,11,opt,name=major_page_faults,json=majorPageFaults,proto3" json:"major_page_faults,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}     `json:"-"`
 	XXX_sizecache        int32        `json:"-"`
 }
@@ -14295,6 +14303,26 @@ func (m *LinuxContainerResources) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	}
 	if m.MemoryLimitInBytes != 0 {
 		i = encodeVarintApi(dAtA, i, uint64(m.MemoryLimitInBytes))
+		i--
+		dAtA[i] = 0x20
+	}
+	if m.MemoryNodeLimit1InBytes != 0 {
+		i = encodeVarintApi(dAtA, i, uint64(m.MemoryNodeLimit1InBytes))
+		i--
+		dAtA[i] = 0x20
+	}
+	if m.MemoryNodeLimit2InBytes != 0 {
+		i = encodeVarintApi(dAtA, i, uint64(m.MemoryNodeLimit2InBytes))
+		i--
+		dAtA[i] = 0x20
+	}
+	if m.MemoryNodeLimit3InBytes != 0 {
+		i = encodeVarintApi(dAtA, i, uint64(m.MemoryNodeLimit3InBytes))
+		i--
+		dAtA[i] = 0x20
+	}
+	if m.MemoryNodeLimit4InBytes != 0 {
+		i = encodeVarintApi(dAtA, i, uint64(m.MemoryNodeLimit4InBytes))
 		i--
 		dAtA[i] = 0x20
 	}
@@ -22721,6 +22749,10 @@ func (this *LinuxContainerResources) String() string {
 		`CpuQuota:` + fmt.Sprintf("%v", this.CpuQuota) + `,`,
 		`CpuShares:` + fmt.Sprintf("%v", this.CpuShares) + `,`,
 		`MemoryLimitInBytes:` + fmt.Sprintf("%v", this.MemoryLimitInBytes) + `,`,
+		`MemoryNodeLimit1InBytes:` + fmt.Sprintf("%v", this.MemoryNodeLimit1InBytes) + `,`,
+		`MemoryNodeLimit2InBytes:` + fmt.Sprintf("%v", this.MemoryNodeLimit2InBytes) + `,`,
+		`MemoryNodeLimit3InBytes:` + fmt.Sprintf("%v", this.MemoryNodeLimit3InBytes) + `,`,
+		`MemoryNodeLimit4InBytes:` + fmt.Sprintf("%v", this.MemoryNodeLimit4InBytes) + `,`,
 		`OomScoreAdj:` + fmt.Sprintf("%v", this.OomScoreAdj) + `,`,
 		`CpusetCpus:` + fmt.Sprintf("%v", this.CpusetCpus) + `,`,
 		`CpusetMems:` + fmt.Sprintf("%v", this.CpusetMems) + `,`,

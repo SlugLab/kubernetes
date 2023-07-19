@@ -247,6 +247,16 @@ func (m *qosContainerManagerImpl) setMemoryReserve(configs map[v1.PodQOSClass]*C
 	// Calculate QOS memory limits
 	burstableLimit := allocatable - (qosMemoryRequests[v1.PodQOSGuaranteed] * percentReserve / 100)
 	bestEffortLimit := burstableLimit - (qosMemoryRequests[v1.PodQOSBurstable] * percentReserve / 100)
+	burstableNodeLimit := make(map[int32] int64, 4)
+	bestEffortNodeLimit := make(map[int32] int64, 4) 
+	burstableNodeLimit[0] = allocatable - (qosMemoryRequests[v1.PodQOSGuaranteed] * percentReserve / 100)
+	bestEffortNodeLimit[0] = burstableLimit - (qosMemoryRequests[v1.PodQOSBurstable] * percentReserve / 100)
+	for i := 1; i < 4; i++ {
+		burstableNodeLimit[int32(i)] = 0
+		bestEffortNodeLimit[int32(i)] = 0
+	}
+	configs[v1.PodQOSBurstable].ResourceParameters.MemoryNodeLimit = burstableNodeLimit
+	configs[v1.PodQOSBestEffort].ResourceParameters.MemoryNodeLimit = bestEffortNodeLimit
 	configs[v1.PodQOSBurstable].ResourceParameters.Memory = &burstableLimit
 	configs[v1.PodQOSBestEffort].ResourceParameters.Memory = &bestEffortLimit
 }

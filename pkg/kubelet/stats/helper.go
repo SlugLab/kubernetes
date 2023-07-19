@@ -63,6 +63,10 @@ func cadvisorInfoToCPUandMemoryStats(info *cadvisorapiv2.ContainerInfo) (*statsa
 			UsageBytes:      &cstat.Memory.Usage,
 			WorkingSetBytes: &cstat.Memory.WorkingSet,
 			RSSBytes:        &cstat.Memory.RSS,
+			RSS1Bytes:        &cstat.Memory.RSS1,
+			RSS2Bytes:        &cstat.Memory.RSS2,
+			RSS3Bytes:        &cstat.Memory.RSS3,
+			RSS4Bytes:        &cstat.Memory.RSS4,
 			PageFaults:      &pageFaults,
 			MajorPageFaults: &majorPageFaults,
 		}

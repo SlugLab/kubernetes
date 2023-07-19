@@ -155,7 +155,7 @@ func enforceExistingCgroup(cgroupManager CgroupManager, cName CgroupName, rl v1.
 		Name:               cName,
 		ResourceParameters: rp,
 	}
-	klog.V(4).InfoS("Enforcing limits on cgroup", "cgroupName", cName, "cpuShares", cgroupConfig.ResourceParameters.CPUShares, "memory", cgroupConfig.ResourceParameters.Memory, "pidsLimit", cgroupConfig.ResourceParameters.PidsLimit)
+	klog.V(4).InfoS("Enforcing limits on cgroup", "cgroupName", cName, "cpuShares", cgroupConfig.ResourceParameters.CPUShares, "memory", cgroupConfig.ResourceParameters.Memory, "node_limit1", cgroupConfig.ResourceParameters.Memory, "pidsLimit", cgroupConfig.ResourceParameters.PidsLimit)
 	if err := cgroupManager.Validate(cgroupConfig.Name); err != nil {
 		return err
 	}
