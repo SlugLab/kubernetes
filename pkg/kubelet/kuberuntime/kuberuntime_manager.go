@@ -771,19 +771,35 @@ func (m *kubeGenericRuntimeManager) updatePodContainerResources(pod *v1.Pod, res
 			container.Resources.Limits = v1.ResourceList{
 				v1.ResourceCPU:    *resource.NewMilliQuantity(cInfo.currentContainerResources.cpuLimit, resource.DecimalSI),
 				v1.ResourceMemory: *resource.NewQuantity(cInfo.desiredContainerResources.memoryLimit, resource.BinarySI),
+				v1.ResourceLimitsNodeLimits1: *resource.NewQuantity(cInfo.desiredContainerResources.memoryLimit, resource.BinarySI),
+				v1.ResourceLimitsNodeLimits2: *resource.NewQuantity(cInfo.desiredContainerResources.memoryLimit, resource.BinarySI),
+				v1.ResourceLimitsNodeLimits3: *resource.NewQuantity(cInfo.desiredContainerResources.memoryLimit, resource.BinarySI),
+				v1.ResourceLimitsNodeLimits4: *resource.NewQuantity(cInfo.desiredContainerResources.memoryLimit, resource.BinarySI),
 			}
 			container.Resources.Requests = v1.ResourceList{
 				v1.ResourceCPU:    *resource.NewMilliQuantity(cInfo.currentContainerResources.cpuRequest, resource.DecimalSI),
 				v1.ResourceMemory: *resource.NewQuantity(cInfo.desiredContainerResources.memoryRequest, resource.BinarySI),
+				v1.ResourceLimitsNodeLimits1: *resource.NewQuantity(cInfo.desiredContainerResources.memoryRequest, resource.BinarySI),
+				v1.ResourceLimitsNodeLimits2: *resource.NewQuantity(cInfo.desiredContainerResources.memoryRequest, resource.BinarySI),
+				v1.ResourceLimitsNodeLimits3: *resource.NewQuantity(cInfo.desiredContainerResources.memoryRequest, resource.BinarySI),
+				v1.ResourceLimitsNodeLimits4: *resource.NewQuantity(cInfo.desiredContainerResources.memoryRequest, resource.BinarySI),
 			}
 		case v1.ResourceCPU:
 			container.Resources.Limits = v1.ResourceList{
 				v1.ResourceCPU:    *resource.NewMilliQuantity(cInfo.desiredContainerResources.cpuLimit, resource.DecimalSI),
 				v1.ResourceMemory: *resource.NewQuantity(cInfo.currentContainerResources.memoryLimit, resource.BinarySI),
+				v1.ResourceLimitsNodeLimits1: *resource.NewQuantity(cInfo.currentContainerResources.memoryLimit, resource.BinarySI),
+				v1.ResourceLimitsNodeLimits2: *resource.NewQuantity(cInfo.currentContainerResources.memoryLimit, resource.BinarySI),
+				v1.ResourceLimitsNodeLimits3: *resource.NewQuantity(cInfo.currentContainerResources.memoryLimit, resource.BinarySI),
+				v1.ResourceLimitsNodeLimits4: *resource.NewQuantity(cInfo.currentContainerResources.memoryLimit, resource.BinarySI),
 			}
 			container.Resources.Requests = v1.ResourceList{
 				v1.ResourceCPU:    *resource.NewMilliQuantity(cInfo.desiredContainerResources.cpuRequest, resource.DecimalSI),
 				v1.ResourceMemory: *resource.NewQuantity(cInfo.currentContainerResources.memoryRequest, resource.BinarySI),
+				v1.ResourceLimitsNodeLimits1: *resource.NewQuantity(cInfo.currentContainerResources.memoryRequest, resource.BinarySI),
+				v1.ResourceLimitsNodeLimits2: *resource.NewQuantity(cInfo.currentContainerResources.memoryRequest, resource.BinarySI),
+				v1.ResourceLimitsNodeLimits3: *resource.NewQuantity(cInfo.currentContainerResources.memoryRequest, resource.BinarySI),
+				v1.ResourceLimitsNodeLimits4: *resource.NewQuantity(cInfo.currentContainerResources.memoryRequest, resource.BinarySI),
 			}
 		}
 		if err := m.updateContainerResources(pod, container, cInfo.kubeContainerID); err != nil {

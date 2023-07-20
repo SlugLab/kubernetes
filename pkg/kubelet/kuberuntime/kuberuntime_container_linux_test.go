@@ -299,7 +299,7 @@ func TestCalculateLinuxResources(t *testing.T) {
 		},
 	}
 	for _, test := range tests {
-		linuxContainerResources := m.calculateLinuxResources(test.cpuReq, test.cpuLim, test.memLim)
+		linuxContainerResources := m.calculateLinuxResources(test.cpuReq, test.cpuLim, test.memLim,test.memLim,test.memLim,test.memLim,test.memLim)
 		assert.Equal(t, test.expected, linuxContainerResources)
 	}
 }

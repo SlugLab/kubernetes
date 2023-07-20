@@ -164,14 +164,14 @@ func (m *kubeGenericRuntimeManager) generateLinuxContainerResources(pod *v1.Pod,
 					lcr.Unified[k] = v
 				}
 			}
-			if len(memoryNodeLimit) == 4 {
-				lcr.MemoryNodeLimit1InBytes = memoryNodeLimit[0]
-				lcr.MemoryNodeLimit2InBytes = memoryNodeLimit[1]
-				lcr.MemoryNodeLimit3InBytes = memoryNodeLimit[2]
-				lcr.MemoryNodeLimit4InBytes = memoryNodeLimit[3]
-				klog.V(4).InfoS("MemoryQoS config for container", "pod", klog.KObj(pod), "containerName", container.Name, "unified", unified,
-					"memoryNodeLimit1", memoryNodeLimit[0], "memoryNodeLimit2", memoryNodeLimit[1], "memoryNodeLimit3", memoryNodeLimit[2], "memoryNodeLimit4", memoryNodeLimit[3])
-			}
+			// if len(memoryNodeLimit) == 4 {
+			// 	lcr.MemoryNodeLimit1InBytes = memoryNodeLimit[0]
+			// 	lcr.MemoryNodeLimit2InBytes = memoryNodeLimit[1]
+			// 	lcr.MemoryNodeLimit3InBytes = memoryNodeLimit[2]
+			// 	lcr.MemoryNodeLimit4InBytes = memoryNodeLimit[3]
+			// 	klog.V(4).InfoS("MemoryQoS config for container", "pod", klog.KObj(pod), "containerName", container.Name, "unified", unified,
+			// 		"memoryNodeLimit1", memoryNodeLimit[0], "memoryNodeLimit2", memoryNodeLimit[1], "memoryNodeLimit3", memoryNodeLimit[2], "memoryNodeLimit4", memoryNodeLimit[3])
+			// }
 		}
 	}
 
