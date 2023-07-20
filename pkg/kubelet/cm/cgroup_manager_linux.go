@@ -389,6 +389,12 @@ func (m *cgroupManagerImpl) toResources(resourceConfig *ResourceConfig) *libcont
 		for k, v := range resourceConfig.Unified {
 			resources.Unified[k] = v
 		}
+		if resourceConfig.MemoryNodeLimit != nil {
+			resources.Unified["node_limit1"] = string(resourceConfig.MemoryNodeLimit[0])
+			resources.Unified["node_limit2"] = string(resourceConfig.MemoryNodeLimit[1])
+			resources.Unified["node_limit3"] = string(resourceConfig.MemoryNodeLimit[2])
+			resources.Unified["node_limit4"] = string(resourceConfig.MemoryNodeLimit[3])
+		}
 	}
 	return resources
 }
@@ -739,12 +745,28 @@ func setCgroupMemoryConfig(cgroupPath string, resourceConfig *ResourceConfig) er
 	if err := os.WriteFile(filepath.Join(cgroupPath, memLimitFile), []byte(memLimit), 0700); err != nil {
 		return fmt.Errorf("failed to write %v to %v/%v: %v", memLimit, cgroupPath, memLimitFile, err)
 	}
-	memNodeLimitFile := "memory.node_limit"
-	for i := 0; i < 4; i++ {
-		memLimit := strconv.FormatInt(resourceConfig.MemoryNodeLimit[int32(i)], 10)
-		if err := os.WriteFile(filepath.Join(cgroupPath, fmt.Sprintf("%s%d", memNodeLimitFile, i)), []byte(memLimit), 0700); err != nil {
-			return fmt.Errorf("failed to write %v to %v/%v: %v", memLimit, cgroupPath, memLimitFile, err)
-		}
+	memNodeLimit1File := "memory.node_limit1"
+	memLimit1 := strconv.FormatInt(resourceConfig.MemoryNodeLimit[0], 10)
+	if err := os.WriteFile(filepath.Join(cgroupPath, memNodeLimit1File), []byte(memLimit1), 0700); err != nil {
+		return fmt.Errorf("failed to write %v to %v/%v: %v", memLimit, cgroupPath, memLimitFile, err)
+	}
+
+	memNodeLimit2File := "memory.node_limit2"
+	memLimit2 := strconv.FormatInt(resourceConfig.MemoryNodeLimit[1], 10)
+	if err := os.WriteFile(filepath.Join(cgroupPath, memNodeLimit2File), []byte(memLimit2), 0700); err != nil {
+		return fmt.Errorf("failed to write %v to %v/%v: %v", memLimit, cgroupPath, memLimitFile, err)
+	}
+
+	memNodeLimit3File := "memory.node_limit3"
+	memLimit3 := strconv.FormatInt(resourceConfig.MemoryNodeLimit[2], 10)
+	if err := os.WriteFile(filepath.Join(cgroupPath, memNodeLimit3File), []byte(memLimit3), 0700); err != nil {
+		return fmt.Errorf("failed to write %v to %v/%v: %v", memLimit, cgroupPath, memLimitFile, err)
+	}
+
+	memNodeLimit4File := "memory.node_limit4"
+	memLimit4 := strconv.FormatInt(resourceConfig.MemoryNodeLimit[3], 10)
+	if err := os.WriteFile(filepath.Join(cgroupPath, memNodeLimit4File), []byte(memLimit4), 0700); err != nil {
+		return fmt.Errorf("failed to write %v to %v/%v: %v", memLimit, cgroupPath, memLimitFile, err)
 	}
 	//TODO(vinaykul,InPlacePodVerticalScaling): Add memory request support
 	return nil
