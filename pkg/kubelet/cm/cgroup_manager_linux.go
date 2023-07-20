@@ -380,10 +380,10 @@ func (m *cgroupManagerImpl) toResources(resourceConfig *ResourceConfig) *libcont
 	}
 
 	m.maybeSetHugetlb(resourceConfig, resources)
-	resources.NodeLimit1 = resourceConfig.MemoryNodeLimit[0]
-	resources.NodeLimit2 = resourceConfig.MemoryNodeLimit[1]
-	resources.NodeLimit3 = resourceConfig.MemoryNodeLimit[2]
-	resources.NodeLimit4 = resourceConfig.MemoryNodeLimit[3]
+	resources.NodeLimit1 = resourceConfig.MemoryNodeLimit[0] >> 20
+	resources.NodeLimit2 = resourceConfig.MemoryNodeLimit[1] >> 20
+	resources.NodeLimit3 = resourceConfig.MemoryNodeLimit[2] >> 20
+	resources.NodeLimit4 = resourceConfig.MemoryNodeLimit[3] >> 20
 	
 	// Ideally unified is used for all the resources when running on cgroup v2.
 	// It doesn't make difference for the memory.max limit, but for e.g. the cpu controller
