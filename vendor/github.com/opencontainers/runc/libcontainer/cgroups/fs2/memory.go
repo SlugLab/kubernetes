@@ -61,7 +61,26 @@ func setMemory(dirPath string, r *configs.Resources) error {
 			return err
 		}
 	}
-
+	if val := numToStr(r.NodeLimit1); val != "" {
+		if err := cgroups.WriteFile(dirPath, "memory.node_limit1", val); err != nil {
+			return err
+		}
+	}
+	if val := numToStr(r.NodeLimit2); val != "" {
+		if err := cgroups.WriteFile(dirPath, "memory.node_limit2", val); err != nil {
+			return err
+		}
+	}
+	if val := numToStr(r.NodeLimit3); val != "" {
+		if err := cgroups.WriteFile(dirPath, "memory.node_limit3", val); err != nil {
+			return err
+		}
+	}
+	if val := numToStr(r.NodeLimit4); val != "" {
+		if err := cgroups.WriteFile(dirPath, "memory.node_limit4", val); err != nil {
+			return err
+		}
+	}
 	// cgroup.Resources.KernelMemory is ignored
 
 	if val := numToStr(r.MemoryReservation); val != "" {

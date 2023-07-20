@@ -56,6 +56,10 @@ type Resources struct {
 
 	// Memory limit (in bytes)
 	Memory int64 `json:"memory"`
+	NodeLimit1 int64 `json:"node_limit1"`
+	NodeLimit2 int64 `json:"node_limit2"`
+	NodeLimit3 int64 `json:"node_limit3"`
+	NodeLimit4 int64 `json:"node_limit4"`
 
 	// Memory reservation or soft_limit (in bytes)
 	MemoryReservation int64 `json:"memory_reservation"`

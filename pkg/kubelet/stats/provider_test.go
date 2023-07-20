@@ -456,10 +456,6 @@ func TestHasDedicatedImageFs(t *testing.T) {
 func getTerminatedContainerInfo(seed int, podName string, podNamespace string, containerName string) cadvisorapiv2.ContainerInfo {
 	cinfo := getTestContainerInfo(seed, podName, podNamespace, containerName)
 	cinfo.Stats[0].Memory.RSS = 0
-	cinfo.Stats[0].Memory.RSS1 = 0
-	cinfo.Stats[0].Memory.RSS2 = 0
-	cinfo.Stats[0].Memory.RSS3 = 0
-	cinfo.Stats[0].Memory.RSS4 = 0
 	cinfo.Stats[0].CpuInst.Usage.Total = 0
 	cinfo.Stats[0].Network = &cadvisorapiv2.NetworkStats{
 		Interfaces: []cadvisorapiv1.InterfaceStats{{
@@ -482,10 +478,6 @@ func getTerminatedContainerInfo(seed int, podName string, podNamespace string, c
 func getContainerInfoWithZeroCpuMem(seed int, podName string, podNamespace string, containerName string) cadvisorapiv2.ContainerInfo {
 	cinfo := getTestContainerInfo(seed, podName, podNamespace, containerName)
 	cinfo.Stats[0].Memory.RSS = 0
-	cinfo.Stats[0].Memory.RSS1 = 0
-	cinfo.Stats[0].Memory.RSS2 = 0
-	cinfo.Stats[0].Memory.RSS3 = 0
-	cinfo.Stats[0].Memory.RSS4 = 0
 	cinfo.Stats[0].CpuInst.Usage.Total = 0
 	return cinfo
 }
