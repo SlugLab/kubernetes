@@ -116,6 +116,9 @@ func statMemory(dirPath string, stats *cgroups.Stats) error {
 	// cgroup v2 is always hierarchical.
 	stats.MemoryStats.UseHierarchy = true
 
+	pagesByNUMA, err := getPageUsageByNUMAV2(dirPath)
+	stats.MemoryStats.PageUsageByNUMA = pagesByNUMA
+
 	memoryUsage, err := getMemoryDataV2(dirPath, "")
 	if err != nil {
 		if errors.Is(err, unix.ENOENT) && dirPath == UnifiedMountpoint {
@@ -231,5 +234,109 @@ func statsFromMeminfo(stats *cgroups.Stats) error {
 	stats.MemoryStats.Usage.Usage = (main_total - main_free) * 1024
 	stats.MemoryStats.Usage.Limit = math.MaxUint64
 
+	return nil
+}
+
+func getPageUsageByNUMAV2(path string) (cgroups.PageUsageByNUMA, error) {
+	const (
+		maxColumns = math.MaxUint8 + 1
+		file       = "memory.numa_stat"
+	)
+	stats := cgroups.PageUsageByNUMA{}
+
+	fd, err := cgroups.OpenFile(path, file, os.O_RDONLY)
+	if os.IsNotExist(err) {
+		return stats, nil
+	} else if err != nil {
+		return stats, err
+	}
+	defer fd.Close()
+
+	// anon N0=139022336 N1=2760704
+	// file N0=449581056 N1=0
+	// kernel_stack N0=3670016 N1=0
+	// pagetables N0=4116480 N1=0
+	// sec_pagetables N0=0 N1=0
+	// shmem N0=0 N1=0
+	// file_mapped N0=55029760 N1=0
+	// file_dirty N0=0 N1=0
+	// file_writeback N0=0 N1=0
+	// swapcached N0=0 N1=0
+	// anon_thp N0=0 N1=0
+	// file_thp N0=0 N1=0
+	// shmem_thp N0=0 N1=0
+	// inactive_anon N0=138956800 N1=2752512
+	// active_anon N0=65536 N1=8192
+	// inactive_file N0=14770176 N1=0
+	// active_file N0=434810880 N1=0
+	// unevictable N0=0 N1=0
+	// slab_reclaimable N0=2358224 N1=11088
+	// slab_unreclaimable N0=2672352 N1=544144
+	// workingset_refault_anon N0=0 N1=0
+	// workingset_refault_file N0=0 N1=0
+	// workingset_activate_anon N0=0 N1=0
+	// workingset_activate_file N0=0 N1=0
+	// workingset_restore_anon N0=0 N1=0
+	// workingset_restore_file N0=0 N1=0
+	// workingset_nodereclaim N0=0 N1=0
+
+	scanner := bufio.NewScanner(fd)
+	for scanner.Scan() {
+		var field *cgroups.PageStats
+
+		line := scanner.Text()
+		columns := strings.SplitN(line, " ", maxColumns)
+		for i, column := range columns {
+			byNode := strings.SplitN(column, "=", 2)
+			key := byNode[0]
+			if i == 0 { // First column: key is name, val is total.
+				field = getNUMAFieldV2(&stats, key)
+				if field == nil { // unknown field (new kernel?)
+					break
+				}
+				field.Nodes = map[uint8]uint64{}
+			} else { // Subsequent columns: key is N<id>, val is usage.
+				val := byNode[1]
+				if len(key) < 2 || key[0] != 'N' {
+					// This is definitely an error.
+					return stats, malformedLine(path, file, line)
+				}
+
+				n, err := strconv.ParseUint(key[1:], 10, 8)
+				if err != nil {
+					return stats, &parseError{Path: path, File: file, Err: err}
+				}
+
+				usage, err := strconv.ParseUint(val, 10, 64)
+				if err != nil {
+					return stats, &parseError{Path: path, File: file, Err: err}
+				}
+
+				field.Nodes[uint8(n)] += (usage >> 18)
+				field.Total += (usage >> 18)
+			}
+
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		return cgroups.PageUsageByNUMA{}, &parseError{Path: path, File: file, Err: err}
+	}
+
+	return stats, nil
+}
+
+func getNUMAFieldV2(stats *cgroups.PageUsageByNUMA, name string) *cgroups.PageStats {
+	switch name {
+	case "anon":
+		return &stats.Anon
+	case "file_mapped":
+		return &stats.File
+	case "file_dirty":
+		return &stats.File
+	case "file_writeback":
+		return &stats.File
+	case "unevictable":
+		return &stats.Unevictable
+	}
 	return nil
 }

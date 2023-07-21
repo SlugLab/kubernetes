@@ -11,8 +11,6 @@ import (
 	"github.com/opencontainers/runc/libcontainer/configs"
 )
 
-type parseError = fscommon.ParseError
-
 type manager struct {
 	config *configs.Cgroup
 	// dirPath is like "/sys/fs/cgroup/user.slice/user-1001.slice/session-1.scope"

@@ -55,6 +55,30 @@ var (
 		metrics.ALPHA,
 		"")
 
+	containerRSS1Desc = metrics.NewDesc("container_rss_node_1",
+		"Current RSS in megabytes for the container on node 1",
+		[]string{"container", "pod", "namespace"},
+		nil,
+		metrics.ALPHA,
+		"")
+	containerRSS2Desc = metrics.NewDesc("container_rss_node_2",
+		"Current RSS in megabytes for the container on node 2",
+		[]string{"container", "pod", "namespace"},
+		nil,
+		metrics.ALPHA,
+		"")
+	containerRSS3Desc = metrics.NewDesc("container_rss_node_3",
+		"Current RSS in megabytes for the container on node 3",
+		[]string{"container", "pod", "namespace"},
+		nil,
+		metrics.ALPHA,
+		"")
+	containerRSS4Desc = metrics.NewDesc("container_rss_node_4",
+		"Current RSS in megabytes for the container on node 4",
+		[]string{"container", "pod", "namespace"},
+		nil,
+		metrics.ALPHA,
+		"")
 	podCPUUsageDesc = metrics.NewDesc("pod_cpu_usage_seconds_total",
 		"Cumulative cpu time consumed by the pod in core-seconds",
 		[]string{"pod", "namespace"},
@@ -106,6 +130,10 @@ func (rc *resourceMetricsCollector) DescribeWithStability(ch chan<- *metrics.Des
 	ch <- nodeMemoryUsageDesc
 	ch <- containerStartTimeDesc
 	ch <- containerCPUUsageDesc
+	ch <- containerRSS1Desc
+	ch <- containerRSS2Desc
+	ch <- containerRSS3Desc
+	ch <- containerRSS4Desc
 	ch <- containerMemoryUsageDesc
 	ch <- podCPUUsageDesc
 	ch <- podMemoryUsageDesc
@@ -188,6 +216,18 @@ func (rc *resourceMetricsCollector) collectContainerMemoryMetrics(ch chan<- metr
 	ch <- metrics.NewLazyMetricWithTimestamp(s.Memory.Time.Time,
 		metrics.NewLazyConstMetric(containerMemoryUsageDesc, metrics.GaugeValue,
 			float64(*s.Memory.WorkingSetBytes), s.Name, pod.PodRef.Name, pod.PodRef.Namespace))
+	ch <- metrics.NewLazyMetricWithTimestamp(s.Memory.Time.Time,
+		metrics.NewLazyConstMetric(containerRSS1Desc, metrics.GaugeValue,
+			float64(*s.Memory.RSS1Bytes), s.Name, pod.PodRef.Name, pod.PodRef.Namespace))
+	ch <- metrics.NewLazyMetricWithTimestamp(s.Memory.Time.Time,
+		metrics.NewLazyConstMetric(containerRSS2Desc, metrics.GaugeValue,
+			float64(*s.Memory.RSS2Bytes), s.Name, pod.PodRef.Name, pod.PodRef.Namespace))
+	ch <- metrics.NewLazyMetricWithTimestamp(s.Memory.Time.Time,
+		metrics.NewLazyConstMetric(containerRSS3Desc, metrics.GaugeValue,
+			float64(*s.Memory.RSS3Bytes), s.Name, pod.PodRef.Name, pod.PodRef.Namespace))
+	ch <- metrics.NewLazyMetricWithTimestamp(s.Memory.Time.Time,
+		metrics.NewLazyConstMetric(containerRSS4Desc, metrics.GaugeValue,
+			float64(*s.Memory.RSS4Bytes), s.Name, pod.PodRef.Name, pod.PodRef.Namespace))
 }
 
 func (rc *resourceMetricsCollector) collectPodCPUMetrics(ch chan<- metrics.Metric, pod summary.PodStats) {

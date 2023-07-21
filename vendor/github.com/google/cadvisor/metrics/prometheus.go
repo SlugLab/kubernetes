@@ -410,6 +410,38 @@ func NewPrometheusCollector(i infoProvider, f ContainerLabelsFunc, includedMetri
 				},
 			},
 			{
+				name:      "container_rss_node_1",
+				help:      "Current RSS in MB in node1.",
+				valueType: prometheus.GaugeValue,
+				getValues: func(s *info.ContainerStats) metricValues {
+					return metricValues{{value: float64(s.Memory.RSS1), timestamp: s.Timestamp}}
+				},
+			},
+			{
+				name:      "container_rss_node_2",
+				help:      "Current RSS in MB in node2.",
+				valueType: prometheus.GaugeValue,
+				getValues: func(s *info.ContainerStats) metricValues {
+					return metricValues{{value: float64(s.Memory.RSS2), timestamp: s.Timestamp}}
+				},
+			},
+			{
+				name:      "container_rss_node_3",
+				help:      "Current RSS in MB in node3.",
+				valueType: prometheus.GaugeValue,
+				getValues: func(s *info.ContainerStats) metricValues {
+					return metricValues{{value: float64(s.Memory.RSS3), timestamp: s.Timestamp}}
+				},
+			},
+			{
+				name:      "container_rss_node_4",
+				help:      "Current RSS in MB in node4.",
+				valueType: prometheus.GaugeValue,
+				getValues: func(s *info.ContainerStats) metricValues {
+					return metricValues{{value: float64(s.Memory.RSS4), timestamp: s.Timestamp}}
+				},
+			},
+			{
 				name:      "container_memory_max_usage_bytes",
 				help:      "Maximum memory usage recorded in bytes",
 				valueType: prometheus.GaugeValue,
