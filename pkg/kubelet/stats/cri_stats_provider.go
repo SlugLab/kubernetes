@@ -612,6 +612,18 @@ func (p *criStatsProvider) makeContainerStats(
 		if stats.Memory.WorkingSetBytes != nil {
 			result.Memory.WorkingSetBytes = &stats.Memory.WorkingSetBytes.Value
 		}
+		if stats.Memory.Rss1Bytes != nil {
+			result.Memory.RSS1Bytes = &stats.Memory.Rss1Bytes.Value
+		}
+		if stats.Memory.Rss2Bytes != nil {
+			result.Memory.RSS2Bytes = &stats.Memory.Rss2Bytes.Value
+		}
+		if stats.Memory.Rss3Bytes != nil {
+			result.Memory.RSS3Bytes = &stats.Memory.Rss3Bytes.Value
+		}
+		if stats.Memory.Rss4Bytes != nil {
+			result.Memory.RSS4Bytes = &stats.Memory.Rss4Bytes.Value
+		}
 	} else {
 		result.Memory.Time = metav1.NewTime(time.Unix(0, time.Now().UnixNano()))
 		result.Memory.WorkingSetBytes = uint64Ptr(0)

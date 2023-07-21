@@ -216,18 +216,20 @@ func (rc *resourceMetricsCollector) collectContainerMemoryMetrics(ch chan<- metr
 	ch <- metrics.NewLazyMetricWithTimestamp(s.Memory.Time.Time,
 		metrics.NewLazyConstMetric(containerMemoryUsageDesc, metrics.GaugeValue,
 			float64(*s.Memory.WorkingSetBytes), s.Name, pod.PodRef.Name, pod.PodRef.Namespace))
-	ch <- metrics.NewLazyMetricWithTimestamp(s.Memory.Time.Time,
-		metrics.NewLazyConstMetric(containerRSS1Desc, metrics.GaugeValue,
-			float64(*s.Memory.RSS1Bytes), s.Name, pod.PodRef.Name, pod.PodRef.Namespace))
-	ch <- metrics.NewLazyMetricWithTimestamp(s.Memory.Time.Time,
-		metrics.NewLazyConstMetric(containerRSS2Desc, metrics.GaugeValue,
-			float64(*s.Memory.RSS2Bytes), s.Name, pod.PodRef.Name, pod.PodRef.Namespace))
-	ch <- metrics.NewLazyMetricWithTimestamp(s.Memory.Time.Time,
-		metrics.NewLazyConstMetric(containerRSS3Desc, metrics.GaugeValue,
-			float64(*s.Memory.RSS3Bytes), s.Name, pod.PodRef.Name, pod.PodRef.Namespace))
-	ch <- metrics.NewLazyMetricWithTimestamp(s.Memory.Time.Time,
-		metrics.NewLazyConstMetric(containerRSS4Desc, metrics.GaugeValue,
-			float64(*s.Memory.RSS4Bytes), s.Name, pod.PodRef.Name, pod.PodRef.Namespace))
+	if s.Memory.RSS1Bytes != nil {
+		ch <- metrics.NewLazyMetricWithTimestamp(s.Memory.Time.Time,
+			metrics.NewLazyConstMetric(containerRSS1Desc, metrics.GaugeValue,
+				float64(*s.Memory.RSS1Bytes), s.Name, pod.PodRef.Name, pod.PodRef.Namespace))
+		ch <- metrics.NewLazyMetricWithTimestamp(s.Memory.Time.Time,
+			metrics.NewLazyConstMetric(containerRSS2Desc, metrics.GaugeValue,
+				float64(*s.Memory.RSS2Bytes), s.Name, pod.PodRef.Name, pod.PodRef.Namespace))
+		ch <- metrics.NewLazyMetricWithTimestamp(s.Memory.Time.Time,
+			metrics.NewLazyConstMetric(containerRSS3Desc, metrics.GaugeValue,
+				float64(*s.Memory.RSS3Bytes), s.Name, pod.PodRef.Name, pod.PodRef.Namespace))
+		ch <- metrics.NewLazyMetricWithTimestamp(s.Memory.Time.Time,
+			metrics.NewLazyConstMetric(containerRSS4Desc, metrics.GaugeValue,
+				float64(*s.Memory.RSS4Bytes), s.Name, pod.PodRef.Name, pod.PodRef.Namespace))
+	}
 }
 
 func (rc *resourceMetricsCollector) collectPodCPUMetrics(ch chan<- metrics.Metric, pod summary.PodStats) {

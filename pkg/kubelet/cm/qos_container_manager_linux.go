@@ -230,6 +230,10 @@ func (m *qosContainerManagerImpl) setMemoryReserve(configs map[v1.PodQOSClass]*C
 
 	resources := m.getNodeAllocatable()
 	allocatableResource, ok := resources[v1.ResourceMemory]
+	allocatableResource1, ok := resources[v1.ResourceNodeLimit1]
+	allocatableResource2, ok := resources[v1.ResourceNodeLimit2]
+	allocatableResource3, ok := resources[v1.ResourceNodeLimit3]
+	allocatableResource4, ok := resources[v1.ResourceNodeLimit4]
 	if !ok {
 		klog.V(2).InfoS("Allocatable memory value could not be determined, not setting QoS memory limits")
 		return
@@ -251,10 +255,16 @@ func (m *qosContainerManagerImpl) setMemoryReserve(configs map[v1.PodQOSClass]*C
 	bestEffortNodeLimit := make(map[int32] int64, 4) 
 	burstableNodeLimit[0] = allocatable - (qosMemoryRequests[v1.PodQOSGuaranteed] * percentReserve / 100)
 	bestEffortNodeLimit[0] = burstableLimit - (qosMemoryRequests[v1.PodQOSBurstable] * percentReserve / 100)
-	for i := 1; i < 4; i++ {
-		burstableNodeLimit[int32(i)] = 0
-		bestEffortNodeLimit[int32(i)] = 0
-	}
+
+	burstableNodeLimit[0] = allocatableResource1.Value()
+	burstableNodeLimit[1] = allocatableResource2.Value()
+	burstableNodeLimit[2] = allocatableResource3.Value()
+	burstableNodeLimit[3] = allocatableResource4.Value()
+	bestEffortNodeLimit[0] = allocatableResource1.Value()
+	bestEffortNodeLimit[1] = allocatableResource2.Value()
+	bestEffortNodeLimit[2] = allocatableResource3.Value()
+	bestEffortNodeLimit[3] = allocatableResource4.Value()
+	
 	configs[v1.PodQOSBurstable].ResourceParameters.MemoryNodeLimit = burstableNodeLimit
 	configs[v1.PodQOSBestEffort].ResourceParameters.MemoryNodeLimit = bestEffortNodeLimit
 	configs[v1.PodQOSBurstable].ResourceParameters.Memory = &burstableLimit
