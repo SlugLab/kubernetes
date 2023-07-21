@@ -806,11 +806,11 @@ func setMemoryStats(s *cgroups.Stats, ret *info.ContainerStats) {
 	if cgroups.IsCgroup2UnifiedMode() {
 		ret.Memory.Cache = s.MemoryStats.Stats["file"]
 		ret.Memory.RSS = s.MemoryStats.Stats["anon"]
-		ret.Memory.RSS1 = s.MemoryStats.PageUsageByNUMA.Total.Nodes[0]
-		ret.Memory.RSS2 = s.MemoryStats.PageUsageByNUMA.Total.Nodes[1]
-		if len(s.MemoryStats.PageUsageByNUMA.Total.Nodes) > 2 {
-			ret.Memory.RSS3 = s.MemoryStats.PageUsageByNUMA.Total.Nodes[2]
-			ret.Memory.RSS4 = s.MemoryStats.PageUsageByNUMA.Total.Nodes[3]
+		ret.Memory.RSS1 = s.MemoryStats.PageUsageByNUMA.Anon.Nodes[0] >> 20
+		ret.Memory.RSS2 = s.MemoryStats.PageUsageByNUMA.Anon.Nodes[1] >> 20
+		if len(s.MemoryStats.PageUsageByNUMA.Anon.Nodes) > 2 {
+			ret.Memory.RSS3 = s.MemoryStats.PageUsageByNUMA.Anon.Nodes[2] >> 20
+			ret.Memory.RSS4 = s.MemoryStats.PageUsageByNUMA.Anon.Nodes[3] >> 20
 		}
 		ret.Memory.Swap = s.MemoryStats.SwapUsage.Usage - s.MemoryStats.Usage.Usage
 		ret.Memory.MappedFile = s.MemoryStats.Stats["file_mapped"]

@@ -311,13 +311,8 @@ func getPageUsageByNUMAV2(path string) (cgroups.PageUsageByNUMA, error) {
 				if err != nil {
 					return stats, &parseError{Path: path, File: file, Err: err}
 				}
-				if !strings.HasSuffix(key, "thp") {
-					field.Nodes[uint8(n)] += usage
-					field.Total += usage
-				} else {
-					field.Nodes[uint8(n)] += (usage >> 5)
-					field.Total += (usage >> 5)
-				}
+				field.Nodes[uint8(n)] += usage
+				field.Total += usage
 			}
 
 		}
@@ -335,15 +330,11 @@ func getNUMAFieldV2(stats *cgroups.PageUsageByNUMA, name string) *cgroups.PageSt
 		return &stats.Total
 	case "anon":
 		return &stats.Anon
-	case "anon_thp":
-		return &stats.Anon
 	case "file_mapped":
 		return &stats.File
 	case "file_dirty":
 		return &stats.File
 	case "file_writeback":
-		return &stats.File
-	case "file_thp":
 		return &stats.File
 	case "unevictable":
 		return &stats.Unevictable
