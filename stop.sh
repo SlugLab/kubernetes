@@ -1,5 +1,7 @@
 #!/bin/bash
-service kube-apiserver stop
-service kube-scheduler stop
-service kube-controller-manager stop
+service kube-apiserver start
+service kube-scheduler start
+service kube-controller-manager start
+service kubelet start
+service kube-proxy start
 cp _output/bin/* /opt/k8s/bin/
